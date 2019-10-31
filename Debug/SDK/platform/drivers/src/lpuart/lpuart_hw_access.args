@@ -69,5 +69,5 @@
 -ffunction-sections
 -fdata-sections
 -mcpu=cortex-m0plus
--specs=ewl_c9x_noio.specs
+-specs=ewl_c9x_hosted.specs
 --sysroot="C:/NXP/S32DS_ARM_v2018.R1/S32DS/arm32_ewl2"

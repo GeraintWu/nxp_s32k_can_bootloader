@@ -13,7 +13,7 @@
 #include "can_user_if.h"
 #include "callbacks.h"
 
-
+#define DEBUG_CONSOLE  (1)
 /* Little Endian to Big Endian macro */
 #define LE2BE_32(c)	(((c & 0xFF) << 24) | ((c & 0xFF00) << 8) | ((c & 0xFF0000) >> 8) | ((c & 0xFF000000) >> 24))
 

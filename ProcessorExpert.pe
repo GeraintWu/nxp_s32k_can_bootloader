@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PEproject>
   <Header>
-    <Name>s32k118_loader6</Name>
+    <Name>s32k118_can_bootloader</Name>
     <SavedBy>Jingtai_Wu</SavedBy>
     <ModificationStamp>16</ModificationStamp>
     <Date>2019-10-19</Date>

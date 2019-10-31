@@ -4,6 +4,7 @@
  *  Created on:
  *      Author:
  */
+#include <stdio.h>
 #include <string.h>
 #include <update.h>
 #include "fsl_flash_driver_c90tfs.h"
@@ -205,6 +206,9 @@ void download_app(void)
     		}
     		(*execute_phase)();
 
+#if(DEBUG_CONSOLE)
+    		printf("<DEBUG MSG> Received ID#:%04XH\n", rx_cmd);
+#endif
     		if(update_done)
     			break;
     	}
