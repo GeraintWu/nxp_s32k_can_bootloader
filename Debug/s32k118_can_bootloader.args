@@ -30,7 +30,7 @@
 "./Generated_Code/can_pal1.o"
 "./Generated_Code/Cpu.o"
 -T
-"C:/Workspace/NXP/S32/S32K118_BL/nxp_s32k_can_bootlader/s32k118_can_bootloader/s32k118_can_bootloader/Project_Settings/Linker_Files/S32K118_25_flash.ld"
+"C:/Workspace/NXP/S32/s32k_can_boot/s32k118_can_bootloader/Project_Settings/Linker_Files/S32K118_25_flash.ld"
 -Wl,-Map,"s32k118_can_bootloader.map"
 -Xlinker
 --gc-sections
