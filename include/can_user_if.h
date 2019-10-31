@@ -35,11 +35,11 @@
 
 
 // ID (command) used for app update
-#define CAN_CMD_UPDATE    0x100
-#define CAN_CMD_ERASE     0x200
-#define CAN_CMD_DATA      0x300
-#define CAN_CMD_END       0x400
-#define CAN_CMD_MASK_ANY  0U
+#define CAN_CMD_UPDATE    (0x100)
+#define CAN_CMD_ERASE     (0x200)
+#define CAN_CMD_DATA      (0x300)
+#define CAN_CMD_END       (0x400)
+#define CAN_CMD_MASK_ANY  (0)
 
 //messagebox
 #define RX_MESSAGE_BOX    CAN_RX_CH0

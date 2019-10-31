@@ -9,7 +9,7 @@
 #include "interrupt_manager.h"
 #include "lpit0.h"
 
-#define TIMEOUT_SECONDS     10
+#define TIMEOUT_SECONDS     (10)
 
 void init_lipt(void);
 
