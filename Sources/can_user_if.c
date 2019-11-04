@@ -83,12 +83,12 @@ static void callbackCan(uint8_t instance,
 	 switch(eventType)
 	 {
 		 case CAN_EVENT_TX_COMPLETE:
-			 g_can_tx_complete = 1;
+			 g_can_tx_complete = true;
 		 break;
 
 		 case CAN_EVENT_RX_COMPLETE:
 
-			 g_can_rx_complete = 1;
+			 g_can_rx_complete = true;
              rx_cmd = g_recvMsg.id;
 #if 0
 			 switch(g_recvMsg.id)

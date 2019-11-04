@@ -39,6 +39,7 @@
 #define CAN_CMD_ERASE     (0x200)
 #define CAN_CMD_DATA      (0x300)
 #define CAN_CMD_END       (0x400)
+#define CAN_CMD_ADDR      (0x500)
 #define CAN_CMD_MASK_ANY  (0)
 
 //messagebox
@@ -58,6 +59,7 @@ typedef enum
 	rx_flash_erase = CAN_CMD_ERASE,
 	rx_flash_data = CAN_CMD_DATA,
 	rx_flash_end  = CAN_CMD_END,
+	rx_flash_addr = CAN_CMD_ADDR
 
 }rx_cmd_status_t;
 
@@ -66,15 +68,16 @@ typedef enum
 	tx_flash_update_ack = CAN_CMD_UPDATE+1,
 	tx_flash_erase_ack = CAN_CMD_ERASE+1,
 	tx_flash_data_ack = CAN_CMD_DATA+1,
-	tx_flash_end_ack = CAN_CMD_END+1
+	tx_flash_end_ack = CAN_CMD_END+1,
+	tx_flash_addr_ack = CAN_CMD_ADDR+1
 }tx_cmd_status_t;
 
 
 can_buff_config_t    g_buffCfg;
 can_message_t        g_recvMsg;
 can_message_t        g_sendMsg;
-uint8_t              g_can_tx_complete;
-uint8_t              g_can_rx_complete;
+bool                 g_can_tx_complete;
+bool                 g_can_rx_complete;
 rx_cmd_status_t      rx_cmd;
 
 
