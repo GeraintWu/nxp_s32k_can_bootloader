@@ -48,14 +48,14 @@ void init_can(void)
 	CAN_Init(&can_pal1_instance, &can_pal1_Config0);
 
 	//RX
-	g_buffCfg.enableFD = false;
-	g_buffCfg.enableBRS = true;
-	g_buffCfg.fdPadding = 0U;
-	g_buffCfg.idType = CAN_MSG_ID_EXT;
-	g_buffCfg.isRemote = false;
+    g_buffCfg.enableFD = false;
+    g_buffCfg.enableBRS = true;
+    g_buffCfg.fdPadding = 0U;
+    g_buffCfg.idType = CAN_MSG_ID_EXT;
+    g_buffCfg.isRemote = false;
 
-	CAN_ConfigRxBuff(&can_pal1_instance, g_can_rx_msg_cmd[0].messagebox, &g_buffCfg, g_can_rx_msg_cmd[0].messageid);
-	CAN_SetRxFilter(&can_pal1_instance,CAN_MSG_ID_EXT,g_can_rx_msg_cmd[0].messagebox, CAN_CMD_MASK_ANY); //mask = 0 => Don't care the ID#
+    CAN_ConfigRxBuff(&can_pal1_instance, g_can_rx_msg_cmd[0].messagebox, &g_buffCfg, g_can_rx_msg_cmd[0].messageid);
+    CAN_SetRxFilter(&can_pal1_instance,CAN_MSG_ID_EXT,g_can_rx_msg_cmd[0].messagebox, CAN_CMD_MASK_ANY); //mask = 0 => Don't care the ID#
 
     // TX
     g_buffCfg.enableFD = false;
@@ -65,7 +65,7 @@ void init_can(void)
     g_buffCfg.isRemote = false;
     CAN_ConfigTxBuff(&can_pal1_instance, g_can_tx_msg_cmd[0].messagebox, &g_buffCfg);
 
-	CAN_InstallEventCallback(&can_pal1_instance, (void *)&callbackCan, NULL);
+    CAN_InstallEventCallback(&can_pal1_instance, (void *)&callbackCan, NULL);
 
 }
 
@@ -88,7 +88,7 @@ static void callbackCan(uint8_t instance,
 
 		 case CAN_EVENT_RX_COMPLETE:
 
-			 g_can_rx_complete = true;
+             g_can_rx_complete = true;
              rx_cmd = g_recvMsg.id;
 #if 0
 			 switch(g_recvMsg.id)

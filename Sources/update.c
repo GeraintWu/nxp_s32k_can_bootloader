@@ -1,8 +1,8 @@
 /*
  * update.c
  *
- *  Created on:
- *      Author:
+ *  Created on: 2019¦~10¤ë28¤é
+ *      Author: Jingtai_Wu
  */
 #include <stdio.h>
 #include <string.h>
@@ -205,10 +205,21 @@ static void null(void){ __asm__ ("NOP");}
  *END**************************************************************************/
 static void comm_send_ack(uint32_t ack_cmd, err_status err_sts)
 {
+#if 1
 	g_sendMsg.id = ack_cmd;
 	g_sendMsg.length = 1;
 	g_sendMsg.data[0] = (uint8_t)err_sts;
-
+#else
+	if(err_sts == err_flash_ok) {
+		//memcpy(g_sendMsg, g_recvMsg, sizeof(can_message_t));
+		g_sendMsg = g_recvMsg;
+		g_sendMsg.id = ack_cmd;
+	} else {
+		g_sendMsg.id = ack_cmd;
+		g_sendMsg.length = 1;
+		g_sendMsg.data[0] = (uint8_t)err_sts;
+	}
+#endif
 	//g_can_rx_complete = 0;
 	if(ack_cmd != tx_flash_end_ack)
 	{

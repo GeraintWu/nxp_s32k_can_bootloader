@@ -88,8 +88,9 @@ int main(void)
 
 
 	  JumpToUserApplication();
-	  /* Stop here since the user program is not valid!!! */
-	  for(;;);
+	  /* Keep in loader mode if the user program is invalid!!! */
+	  //for(;;);
+	  SystemSoftwareReset();
   }
 
 
