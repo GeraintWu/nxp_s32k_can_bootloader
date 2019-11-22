@@ -466,6 +466,7 @@ flash_drv_status_t FlashEraseSector(const flash_ssd_config_t * pSSDConfig, \
     uint32_t temp;                       /* Temporary variable   */
     uint32_t tempSize = size;            /* Temporary of size variation */
 
+    __asm("cpsid i");
 
 #if FEATURE_FLS_HAS_FLEX_NVM
     temp = pSSDConfig->DFlashBase;
@@ -516,6 +517,8 @@ flash_drv_status_t FlashEraseSector(const flash_ssd_config_t * pSSDConfig, \
         tempSize -= sectorSize;
         dest += sectorSize;
     }
+
+    __asm("cpsie i");
 
     return (ret);
 }

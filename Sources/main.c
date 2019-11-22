@@ -115,8 +115,8 @@ int main(void)
 
 /*FUNCTION**********************************************************************
  *
- * Function Name :
- * Description   :
+ * Function Name : board_init
+ * Description   : board initialization (clocks, gpios, peripherals)
  * Implements    :
  *END**************************************************************************/
 static void board_init(void)
@@ -139,8 +139,8 @@ static void board_init(void)
 
 /*FUNCTION**********************************************************************
  *
- * Function Name :
- * Description   :
+ * Function Name : JumpToUserApplication
+ * Description   : jump to application area when it is valid
  * Implements    :
  *END**************************************************************************/
 void JumpToUserApplication(void)
@@ -167,8 +167,8 @@ void JumpToUserApplication(void)
 
 /*FUNCTION**********************************************************************
  *
- * Function Name :
- * Description   :
+ * Function Name : MSR_MSP
+ * Description   : set the stack for the application area
  * Implements    :
  *END**************************************************************************/
 static void MSR_MSP(uint32_t addr)

@@ -39,7 +39,7 @@ static void callbackCan(uint8_t instance,
 
 /*FUNCTION**********************************************************************
  *
- * Function Name :
+ * Function Name : init_can
  * Description   :
  * Implements    :
  *END**************************************************************************/
@@ -71,7 +71,7 @@ void init_can(void)
 
 /*FUNCTION**********************************************************************
  *
- * Function Name :
+ * Function Name : callbackCan
  * Description   :
  * Implements    :
  *END**************************************************************************/

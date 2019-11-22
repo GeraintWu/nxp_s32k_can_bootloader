@@ -32,22 +32,22 @@ const flash_user_config_t Flash_InitConfig0 = {
 };
 
 
-static bool            is_mem_init = false;						/* Variable used to flag is the memory has been initialized */
+static bool            is_mem_init = false;
 static bool            can_update_enabled = false;
 static bool            update_done = false;
 static uint8_t         first_packet;
 static uint32_t        packet_num;
 static can_message_t   g_rx_buf_tmp;
 
-static uint32_t        i;
+
 static uint32_t        erase_offset;
 static uint32_t        erase_addr;
 static uint32_t        write_offest;
 static uint32_t        write_addr;
 static flash_drv_status_t status;
-//err_status err_code = 0;
+//err_status_t err_code = 0;
 
-static void comm_send_ack(uint32_t ack_cmd, err_status err_sts);
+static void comm_send_ack(uint32_t ack_cmd, err_status_t err_sts);
 static void phase1(void);
 static void phase2(void);
 static void phase3(void);
@@ -56,8 +56,9 @@ void (*execute_phase)(void);
 
 /*FUNCTION**********************************************************************
  *
- * Function Name :
- * Description   :
+ * Function Name : wait_update_cmd
+ * Description   : 1. enable CAN receive to wait for CAN command issuing from PC
+ *                 2. wait timeout can be defined by TIMEOUT_SECONDS
  * Implements    :
  *END**************************************************************************/
 uint8_t wait_update_cmd(void)
@@ -67,19 +68,34 @@ uint8_t wait_update_cmd(void)
 	if(!can_update_enabled) {
 
        memset((void *)&g_recvMsg, 0, sizeof(can_message_t));
-	   g_can_rx_complete = true;  // the flag will be set in ISR when rx completed
+	   g_can_rx_complete = false;  // the flag will be set in ISR when rx completed
 	   CAN_Receive(&can_pal1_instance, g_can_rx_msg_cmd[0].messagebox,  &g_recvMsg);
-	   can_update_enabled = 1;
+	   can_update_enabled = true;
 	}
 
-	if((g_can_rx_complete == true) && (g_recvMsg.id == rx_flash_update))
+	//if((g_can_rx_complete == true) && (g_recvMsg.id == rx_flash_update))
+	if((g_can_rx_complete == true))
 	{
-		comm_send_ack(tx_flash_update_ack, err_flash_ok);
+		//comm_send_ack(tx_flash_update_ack, err_flash_ok);
 		status = 1;
 	}
 
 	return status;
 }
+
+/*FUNCTION**********************************************************************
+ *
+ * Function Name : phase0
+ * Description   : app update is triggered from bootloader
+ *                 this phase will not be executed when the update event
+ *                 is trigger in the application area
+ * Implements    :
+ *END**************************************************************************/
+static void phase0(void)
+{
+	comm_send_ack(tx_flash_update_ack, err_flash_ok);
+}
+
 
 /*FUNCTION**********************************************************************
  *
@@ -112,7 +128,7 @@ static void phase1(void)
 			  erase_addr = MEM_APP_START + (erase_offset*FEATURE_FLS_DF_BLOCK_SECTOR_SIZE);
 			  status = FlashEraseSector(&flashSSDConfig, erase_addr, FEATURE_FLS_DF_BLOCK_SECTOR_SIZE, FlashCommandSequence);
 			  if(status != FTFx_OK) {
-				  comm_send_ack(tx_flash_erase_ack, err_flash_erase);
+				  comm_send_ack(tx_flash_erase_ack, (err_status_t)status);
 				  return;
 			  }
 			}
@@ -130,7 +146,8 @@ static void phase1(void)
 /*FUNCTION**********************************************************************
  *
  * Function Name : phase2
- * Description   : write new app to flash sector (8bytes per write)
+ * Description   : 1. decode the write address
+ *                 2. write new app to the sectors of PFlash (8 bytes per write)
  * Implements    :
  *END**************************************************************************/
 static void phase2(void)
@@ -163,7 +180,7 @@ static void phase2(void)
 		   status = FlashProgram(&flashSSDConfig, write_addr, g_recvMsg.length,  g_recvMsg.data, FlashCommandSequence);
 
 		   if(status != FTFx_OK)
-		       comm_send_ack(tx_flash_data_ack, err_flash_write);
+		       comm_send_ack(tx_flash_data_ack, (err_status_t)status);
 		   else {
 			   comm_send_ack(tx_flash_data_ack, err_flash_ok);
 		       packet_num++;
@@ -175,7 +192,8 @@ static void phase2(void)
 /*FUNCTION**********************************************************************
  *
  * Function Name : phase3
- * Description   : write first packet to the start address of app
+ * Description   : write first received packet to the start address
+ *                 to validate the application code
  * Implements    :
  *END**************************************************************************/
 static void phase3(void)
@@ -183,8 +201,7 @@ static void phase3(void)
 	status = FlashProgram(&flashSSDConfig, MEM_APP_START, g_rx_buf_tmp.length,  g_rx_buf_tmp.data, FlashCommandSequence);
 	if(status != FTFx_OK) {
 
-		//comm_send_ack(tx_flash_data_ack, err_flash_write);
-		comm_send_ack(tx_flash_end_ack, err_flash_write);
+		comm_send_ack(tx_flash_end_ack, (err_status_t)status);
 
 	} else {
 
@@ -199,35 +216,43 @@ static void null(void){ __asm__ ("NOP");}
 
 /*FUNCTION**********************************************************************
  *
- * Function Name :
- * Description   :
- * Implements    :
+ * Function Name : comm_send_ack
+ * Description   : acknowledge the processing status to PC
+ * Implements    : status OK : send CMD + received data (8 bytes)
+ *                 status NG : send CMD + error code (data[0] + date[1])
  *END**************************************************************************/
-static void comm_send_ack(uint32_t ack_cmd, err_status err_sts)
+static void comm_send_ack(uint32_t ack_cmd, err_status_t err_sts)
 {
-#if 1
+#if 0 // Do not send the received data back
+
 	g_sendMsg.id = ack_cmd;
 	g_sendMsg.length = 1;
 	g_sendMsg.data[0] = (uint8_t)err_sts;
-#else
-	if(err_sts == err_flash_ok) {
-		//memcpy(g_sendMsg, g_recvMsg, sizeof(can_message_t));
-		g_sendMsg = g_recvMsg;
-		g_sendMsg.id = ack_cmd;
-	} else {
-		g_sendMsg.id = ack_cmd;
-		g_sendMsg.length = 1;
-		g_sendMsg.data[0] = (uint8_t)err_sts;
+
+#else  // Send the received data back
+
+	g_sendMsg.id = ack_cmd;
+	g_sendMsg.length = 8;
+
+	if((ack_cmd == tx_flash_data_ack) && (err_sts == err_flash_ok))
+	{
+		memcpy(g_sendMsg.data, g_recvMsg.data, sizeof(g_recvMsg.data));
 	}
+	else
+	{
+        memset(g_sendMsg.data, 0, sizeof(g_sendMsg.data));
+        g_sendMsg.data[0] = (uint8_t) (err_sts >> 8);
+        g_sendMsg.data[1] = (uint8_t) (err_sts & 0xFF);
+	}
+
 #endif
-	//g_can_rx_complete = 0;
+
 	if(ack_cmd != tx_flash_end_ack)
 	{
 		CAN_Receive(&can_pal1_instance, g_can_rx_msg_cmd[0].messagebox,  &g_recvMsg);
 	}
 
 	CAN_Send(&can_pal1_instance, g_can_tx_msg_cmd[0].messagebox, &g_sendMsg);
-	//while(!g_can_rx_complete);
 
 }
 
@@ -235,11 +260,12 @@ static void comm_send_ack(uint32_t ack_cmd, err_status err_sts)
 /*FUNCTION**********************************************************************
  *
  * Function Name :
- * Description   :
+ * Description   : main loop for the firmware update
  * Implements    :
  *END**************************************************************************/
 void download_app(void)
 {
+	uint32_t i;
 
     while(1)
     {
@@ -249,6 +275,9 @@ void download_app(void)
 
     		switch(rx_cmd)
     		{
+              case rx_flash_update:
+            	  execute_phase = phase0;
+            	  break;
     		  case rx_flash_erase:
     			  execute_phase = phase1;
     			  break;

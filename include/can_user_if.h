@@ -4,10 +4,11 @@
  *  Created on: 2019¦~10¤ë28¤é
  *      Author: Jingtai_Wu
  */
-#include <stdio.h>
 
 #ifndef CAN_USER_IF_H_
 #define CAN_USER_IF_H_
+
+#include <stdio.h>
 
 #define CAN_RX_CH0       1
 #define CAN_RX_CH1       2
@@ -37,9 +38,9 @@
 // ID (command) used for app update
 #define CAN_CMD_UPDATE    (0x100)
 #define CAN_CMD_ERASE     (0x200)
-#define CAN_CMD_DATA      (0x300)
-#define CAN_CMD_END       (0x400)
-#define CAN_CMD_ADDR      (0x500)
+#define CAN_CMD_ADDR      (0x300)
+#define CAN_CMD_DATA      (0x400)
+#define CAN_CMD_END       (0x500)
 #define CAN_CMD_MASK_ANY  (0)
 
 //messagebox
@@ -67,9 +68,10 @@ typedef enum
 {
 	tx_flash_update_ack = CAN_CMD_UPDATE+1,
 	tx_flash_erase_ack = CAN_CMD_ERASE+1,
+	tx_flash_addr_ack = CAN_CMD_ADDR+1,
 	tx_flash_data_ack = CAN_CMD_DATA+1,
-	tx_flash_end_ack = CAN_CMD_END+1,
-	tx_flash_addr_ack = CAN_CMD_ADDR+1
+	tx_flash_end_ack = CAN_CMD_END+1
+
 }tx_cmd_status_t;
 
 

@@ -1,4 +1,7 @@
 
+#ifndef LPIT_USER_IF_H_
+#define LPIT_USER_IF_H_
+
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -9,8 +12,10 @@
 #include "interrupt_manager.h"
 #include "lpit0.h"
 
-#define TIMEOUT_SECONDS     (10)
+#define TIMEOUT_SECONDS     (5)
 
 void init_lipt(void);
 
 uint8_t  wait_timeout;
+
+#endif /* LPIT_USER_IF_H_ */

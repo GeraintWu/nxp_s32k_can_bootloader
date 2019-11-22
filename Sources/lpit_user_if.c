@@ -29,11 +29,11 @@ void init_lipt(void)
 
 /*FUNCTION**********************************************************************
  *
- * Function Name :
- * Description   :
+ * Function Name :   timer interrupt callback
+ * Description   :   1ms-periodic interrupt
  * Implements    :
  *END**************************************************************************/
-/* 1ms-periodic interrupt */
+
 static void lpit_callback(void)
 {
 	LPIT_DRV_ClearInterruptFlagTimerChannels(INST_LPIT0, 0x01U);
