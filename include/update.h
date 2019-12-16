@@ -30,7 +30,7 @@ typedef enum
 	//err_flash_write = 0x00E2,
 	err_flash_addr = 0x00E3,
 	err_flash_ok = 0x0000,
-	err_unknow  = 0xEEEE
+	err_unknown  = 0xEEEE
 }err_status_t;
 
 

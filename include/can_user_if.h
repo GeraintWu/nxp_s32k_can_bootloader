@@ -70,7 +70,8 @@ typedef enum
 	tx_flash_erase_ack = CAN_CMD_ERASE+1,
 	tx_flash_addr_ack = CAN_CMD_ADDR+1,
 	tx_flash_data_ack = CAN_CMD_DATA+1,
-	tx_flash_end_ack = CAN_CMD_END+1
+	tx_flash_end_ack = CAN_CMD_END+1,
+	tx_flash_unknown_ack = 0x1000
 
 }tx_cmd_status_t;
 

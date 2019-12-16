@@ -212,7 +212,10 @@ static void phase3(void)
 	}
 }
 
-static void null(void){ __asm__ ("NOP");}
+static void null(void)
+{
+	comm_send_ack(tx_flash_unknown_ack, err_unknown);
+}
 
 /*FUNCTION**********************************************************************
  *
@@ -252,8 +255,10 @@ static void comm_send_ack(uint32_t ack_cmd, err_status_t err_sts)
 		CAN_Receive(&can_pal1_instance, g_can_rx_msg_cmd[0].messagebox,  &g_recvMsg);
 	}
 
-	CAN_Send(&can_pal1_instance, g_can_tx_msg_cmd[0].messagebox, &g_sendMsg);
-
+	if(ack_cmd != tx_flash_unknown_ack)
+	{
+	    CAN_Send(&can_pal1_instance, g_can_tx_msg_cmd[0].messagebox, &g_sendMsg);
+	}
 }
 
 
